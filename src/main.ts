@@ -9,6 +9,6 @@ async function bootstrap() {
         // origin: ['http://localhost:8100','http://localhost:4200'] ->Privada
     })
     await app.listen(3000);
-}
+}//
 
 bootstrap();
