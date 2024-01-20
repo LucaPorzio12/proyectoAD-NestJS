@@ -9,22 +9,71 @@ export class MoviesController {
 
     @Post('')
     async create(@Body() movieDto: MovieDto) {
-        return this.moviesService.create(movieDto);
+        try {
+            await this.moviesService.create(movieDto);
+            return {
+                status: 'Movie Inserted'
+            }
+        } catch (e) {
+            return {
+                status: e.message
+            }
+        }
     }
 
     @Get('')
     async getMovies() {
-        return this.moviesService.getMovies();
+        try {
+            const movies = await this.moviesService.getMovies();
+            return movies
+        } catch (e) {
+            return {
+                status: e.message
+            }
+        }
+    }
+
+    @Get('genres')
+    async getGenres() {
+        try {
+            const genres = await this.moviesService.getGenres();
+            return genres
+        } catch (e) {
+            return {
+                status: e.message
+            }
+        }
     }
 
     @Get('movie/:id')
     async getMovie(@Param('id') id: string) {
-        return this.moviesService.getMovie(id);
+        try {
+            const movie = await this.moviesService.getMovie(id);
+            if (movie != null) return movie
+            else return {
+                status: 'La película no encontrada'
+            }
+        } catch (e) {
+            return {
+                status: e.message
+            }
+        }
     }
 
     @Get('byName/:name')
     async getMovieByName(@Param('name') name: string) {
-        return this.moviesService.getMovieByName(name);
+
+        try {
+            const movies = await this.moviesService.getMovieByName(name);
+            if (movies != null) return movies
+            else return {
+                status: 'La película no existe'
+            }
+        } catch (e) {
+            return {
+                status: e.message
+            }
+        }
     }
 
     @Patch('/:id')
@@ -32,11 +81,35 @@ export class MoviesController {
         @Param('id') id: string,
         @Body() movieDto: MovieDto
     ) {
-        return this.moviesService.updateMovie(id, movieDto);
+        try {
+            const movie = await this.moviesService.updateMovie(id, movieDto);
+            if (movie != null) return {
+                status: 'Movie updated'
+            }
+            else return {
+                status: 'La película no está en la base de datos'
+            }
+        } catch (e) {
+            return {
+                status: e.message
+            }
+        }
     }
 
     @Delete('/:id')
     async deleteMovie(@Param('id') id: string) {
-        return this.moviesService.deleteMovie(id);
+        try {
+            const movie = await this.moviesService.deleteMovie(id);
+            if (movie != null) return {
+                status: 'Movie deleted'
+            }
+            else return {
+                status: 'La película no está en la base de datos'
+            }
+        } catch (e) {
+            return {
+                status: e.message
+            }
+        }
     }
 }

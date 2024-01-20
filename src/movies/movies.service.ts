@@ -9,78 +9,43 @@ export class MoviesService {
     constructor(@InjectModel('Movie') private movieModel: Model<Movie>) {
     }
 
-    async create(movieDto: MovieDto): Promise<ApiResult> {
-        try {
-            const movie = new this.movieModel(movieDto);
-            await movie.save();
-            return {
-                status: 'Movie Inserted'
-            }
-        } catch (e) {
-            return {
-                status: e
-            }
-        }
+    async create(movieDto: MovieDto): Promise<any> {
+        const movie = new this.movieModel(movieDto);
+        await movie.save();
+
     }
 
-    async getMovies(): Promise<Movie[] | ApiResult> {
-        try {
-            return this.movieModel.find();
-        } catch (e) {
-            return {
-                status: e
-            }
-        }
+    async getMovies(): Promise<Movie[]> {
+
+        return this.movieModel.find();
+
     }
 
-    async getMovie(id: string): Promise<Movie | ApiResult> {
-        try {
-            return this.movieModel.findById(id);
-        } catch (e) {
-            return {
-                status: e
-            }
-        }
+    async getMovie(id: string): Promise<Movie> {
+        return this.movieModel.findById(id);
+
     }
 
-    async getMovieByName(name: string): Promise<Movie[] | ApiResult> {
-        try {
-            const regex = new RegExp(name, 'i');
-            return this.movieModel.find({title: {$regex: regex}});
-        } catch (e) {
-            return {
-                status: e
-            }
-        }
+    async getMovieByName(name: string): Promise<Movie[]> {
+        const regex = new RegExp(name, 'i');
+        return await this.movieModel.find({title: {$regex: regex}});
+
     }
 
-    async updateMovie(id: string, movieDto: MovieDto): Promise<ApiResult> {
-        try {
-            this.movieModel.findByIdAndUpdate(
-                id,
-                {$set: movieDto},
-                {new: true});
-            return {
-                status: 'Movie Updated'
-            }
-        } catch (e) {
-            return {
-                status: e
-            }
-        }
+    async updateMovie(id: string, movieDto: MovieDto): Promise<Movie> {
+        return await this.movieModel.findByIdAndUpdate(
+            id,
+            {$set: movieDto},
+            {new: true});
+
     }
 
-    async deleteMovie(id: string): Promise<ApiResult> {
-        try {
-            this.movieModel.findByIdAndDelete(id);
-            return {
-                status: 'Movie Deleted'
-            }
-        } catch (e) {
-            return {
-                status: e
-            }
-        }
+    async deleteMovie(id: string): Promise<any> {
+        return await this.movieModel.findByIdAndDelete(id);
+    }
+
+    async getGenres() {
+        return this.movieModel.find().distinct('genres');
     }
 }
 
